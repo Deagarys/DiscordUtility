@@ -11,6 +11,7 @@ Features (for now):
 
 ![image](https://github.com/Deagarys/DiscordUtility/assets/37025496/3195406b-e0ac-4431-b09f-6aabd3c8cbe7)
 ![image](https://github.com/Deagarys/DiscordUtility/assets/37025496/fb20fdbc-b489-4795-963a-5b6a37ba7c6d)
+![image](https://github.com/Deagarys/DiscordUtility/assets/37025496/e9a0682a-ab3a-4b21-bb0d-d9f8d6fed973)
 
 If you have any fun feature suggestions please let me know!
 
