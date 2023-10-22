@@ -45,7 +45,6 @@ export class Bot {
 
     protected writeToLog(type: string, message: string): void {
         const logBox = document.getElementById('logBox');
-        console.log(logBox);
         logBox!.prepend(`${new Date().toLocaleTimeString()} - ${type}: ${message} \n`);
     }
 }
