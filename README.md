@@ -9,8 +9,10 @@ Features (for now):
 - Reply with a gif on specific keywords
 - AI Chat bot (using chat-gpt)
 
-![image](https://github.com/Deagarys/DiscordUtility/assets/37025496/3195406b-e0ac-4431-b09f-6aabd3c8cbe7)
-![image](https://github.com/Deagarys/DiscordUtility/assets/37025496/fb20fdbc-b489-4795-963a-5b6a37ba7c6d)
+![image](https://github.com/Deagarys/DiscordUtility/assets/37025496/1ef367df-f5d1-4e2c-bef8-0a5ba8d2f37a)
+
+![image](https://github.com/Deagarys/DiscordUtility/assets/37025496/512db094-0338-4d72-97ca-94844f9897a4)
+
 ![image](https://github.com/Deagarys/DiscordUtility/assets/37025496/e9a0682a-ab3a-4b21-bb0d-d9f8d6fed973)
 
 If you have any fun feature suggestions please let me know!
