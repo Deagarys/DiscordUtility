@@ -1,7 +1,7 @@
 # Discord Utility
 
-This Discord Utility is a fun little project i'm actively wroking on for my own use, 
-Just to have fun and annoy some friends, but shared it in case someone else wanted to have fun with it too or even wanted toexpand on it.
+This Discord Utility is a fun little project I'm actively wroking on for my own use, 
+Just to have fun and annoy some friends, but I shared it just in case someone else wanted to have fun with it aswell or even wanted to expand on it.
 
 Features (for now):
 - Spam
@@ -16,5 +16,3 @@ Features (for now):
 ![image](https://github.com/Deagarys/DiscordUtility/assets/37025496/e9a0682a-ab3a-4b21-bb0d-d9f8d6fed973)
 
 If you have any fun feature suggestions please let me know!
-
-If you decide to download the .exe also make sure to download the empty config.ini file and place it in the same folder.
