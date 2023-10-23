@@ -7,6 +7,7 @@ function ChatBot(args): JSX.Element {
     const [authToken, setAuthToken] = useState('');
     const [userId, setUserId] = useState('');
     const [apiKey, setApiKey] = useState('');
+    const [initialSystemMessage, setInitialSystemMessage] = useState('');
 
     const [systemMessage, setSystemMessage] = useState('');
 
@@ -14,6 +15,7 @@ function ChatBot(args): JSX.Element {
         { id: 'channelId', text: 'Channel Id', setter: setChannelId, getter: channelId },
         { id: 'authToken', text: 'Authorization Token', setter: setAuthToken, getter: authToken },
         { id: 'userId', text: 'User Id', setter: setUserId, getter: userId },
+        { id: 'systemMessage', text: 'System Message', setter: setInitialSystemMessage, getter: initialSystemMessage },
         { id: 'apiKey', text: 'API Key', setter: setApiKey, getter: apiKey }
     ];
     const [bot] = useState(new ChatAiBot());
@@ -33,6 +35,7 @@ function ChatBot(args): JSX.Element {
                     setChannelId(data.channelId);
                     setAuthToken(data.authToken);
                     setUserId(data.userId);
+                    setInitialSystemMessage(data.initialSystemMessage);
                     setApiKey(data.apiKey);
                 });
             }
@@ -48,12 +51,13 @@ function ChatBot(args): JSX.Element {
             channelId: channelId,
             authToken: authToken,
             userId: userId,
+            initialSystemMessage: initialSystemMessage,
             apiKey: apiKey
         });
 
         if (!started) {
             setStarted(true);
-            bot.start(channelId, authToken, userId, apiKey);
+            bot.start(channelId, authToken, userId, initialSystemMessage, apiKey);
             args.method();
         }
     };
@@ -82,9 +86,7 @@ function ChatBot(args): JSX.Element {
                             id={input.id}
                             placeholder={input.text}
                             value={input.getter}
-                            onChange={(e): void =>
-                                input.setter((e.target as HTMLInputElement).value)
-                            }
+                            onChange={(e): void => input.setter((e.target as HTMLInputElement).value)}
                         />
                         <label htmlFor={input.id}>{input.text}</label>
                     </div>
@@ -97,9 +99,7 @@ function ChatBot(args): JSX.Element {
                             className="form-control"
                             placeholder={'System message'}
                             value={systemMessage}
-                            onChange={(e): void =>
-                                setSystemMessage((e.target as HTMLInputElement).value)
-                            }
+                            onChange={(e): void => setSystemMessage((e.target as HTMLInputElement).value)}
                         />
                         <label>System message</label>
                     </div>
@@ -107,12 +107,7 @@ function ChatBot(args): JSX.Element {
                         Send
                     </button>
                     <div className="form-floating">
-                        <textarea
-                            className="form-control log-box log-box-small"
-                            placeholder="Log"
-                            id={'logBox'}
-                            readOnly={true}
-                        ></textarea>
+                        <textarea className="form-control log-box log-box-small" placeholder="Log" id={'logBox'} readOnly={true}></textarea>
                         <label htmlFor="floatingTextarea2">Log</label>
                     </div>
                 </div>

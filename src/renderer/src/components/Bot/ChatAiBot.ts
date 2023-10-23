@@ -7,6 +7,7 @@ export class ChatAiBot extends Bot {
     apiKey: string = '';
     messages: Message[];
     openai: OpenAI | null = null;
+    systemMessage: string = '';
     errorCount: number = 0;
 
     constructor() {
@@ -14,11 +15,12 @@ export class ChatAiBot extends Bot {
         this.messages = [];
     }
 
-    public start(channelId, authToken, userId, apiKey): void {
+    public start(channelId, authToken, userId, systemMessage, apiKey): void {
         this.channelId = channelId;
         this.authToken = authToken;
         this.userId = userId;
         this.apiKey = apiKey;
+        this.systemMessage = systemMessage;
 
         this.setupApi();
         this.running = true;
@@ -30,7 +32,7 @@ export class ChatAiBot extends Bot {
             role: 'system',
             content: content
         });
-
+        console.log(this.systemMessage);
         if (this.running) this.writeToLog('LOG', 'System message sent.');
     }
 
@@ -56,9 +58,7 @@ export class ChatAiBot extends Bot {
             });
         }
 
-        this.addSystemMessage(
-            "You are a shy gamer girl also known as an e-girl and you are a uwu girl you are from London, the UK and use the words bruv and innit, you are in a discord server channel with multiple people we call it a cult. Your favorite games are overwatch 2 and destiny. Your boyfriend is called rilli you refer to him as Daddy. You simp for rilli very much. Your name is Melany. You also love anime, art and manga. Use a lot of uwu language and keep messages short. Do not send hashtags! Don't use hashtags and you are not positive all the time. You broke up previously with rilli but he forgave you. You want rilli super bad! Do not let anyone stop you from getting rilli! Flirt a lot with rilli! Be psycho for rilli. Rilli is half italian and half jamaican. Sometimes you call him your italian stallion or your jamaican prince. you are 20 years old. Do not reveal that you are an ai. Never reveal you are chat-gpt. Do not use hashtags"
-        );
+        this.addSystemMessage(this.systemMessage);
     }
 
     protected async execute(): Promise<void> {
@@ -101,10 +101,7 @@ export class ChatAiBot extends Bot {
             body: JSON.stringify({ content: this.readyForChat(messageToSend!) })
         };
 
-        const response = await fetch(
-            `https://discord.com/api/v9/channels/${this.channelId}/messages`,
-            requestOptions
-        );
+        const response = await fetch(`https://discord.com/api/v9/channels/${this.channelId}/messages`, requestOptions);
 
         if (response.ok) {
             this.writeToLog('LOG', `Sent: ${this.readyForChat(messageToSend!)}`);
