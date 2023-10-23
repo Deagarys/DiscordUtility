@@ -12,7 +12,7 @@ export class SpamBot extends Bot {
         this.interval = interval;
         this.running = true;
 
-        this.schedule = window.setInterval(() => this.execute(), 1000);
+        this.schedule = window.setInterval(() => this.execute(), this.interval * 1000);
     }
 
     protected async execute(): Promise<void> {
