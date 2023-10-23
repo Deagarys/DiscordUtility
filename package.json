@@ -1,6 +1,6 @@
 {
   "name": "discord-utility",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Discord Utility",
   "main": "./out/main/index.js",
   "author": "example.com",
