@@ -2,6 +2,7 @@ import { app, shell, BrowserWindow, Menu, Tray } from 'electron';
 import { join } from 'path';
 import { electronApp, optimizer, is } from '@electron-toolkit/utils';
 import discord from '../../resources/discord.png?asset';
+import discord16 from '../../resources/discord16.png?asset';
 
 function createWindow(): void {
     // Create the browser window.
@@ -45,11 +46,6 @@ function createWindow(): void {
         mainWindow.loadFile(join(__dirname, '../renderer/index.html'));
     }
 
-    mainWindow.on('minimize', function (event) {
-        event.preventDefault();
-        mainWindow.hide();
-    });
-
     mainWindow.on('close', function (event) {
         if (!isQuitting) {
             event.preventDefault();
@@ -65,13 +61,28 @@ function createWindow(): void {
     tray.setContextMenu(
         Menu.buildFromTemplate([
             {
-                label: 'Show Discord Utility',
+                label: `Discord Utility`,
+                icon: discord16,
+                enabled: false
+            },
+            {
+                type: 'separator'
+            },
+            {
+                label: `Version: ${app.getVersion()}`,
+                enabled: false
+            },
+            {
+                type: 'separator'
+            },
+            {
+                label: 'Show',
                 click: function (): void {
                     mainWindow.show();
                 }
             },
             {
-                label: 'Quit Discord Utility',
+                label: 'Quit',
                 click: function (): void {
                     isQuitting = true;
                     app.quit();
@@ -79,6 +90,12 @@ function createWindow(): void {
             }
         ])
     );
+
+    tray.setToolTip('Discord Utility');
+    tray.setTitle('Discord Utility');
+    tray.on('click', (): void => {
+        mainWindow.show();
+    });
 }
 
 // This method will be called when Electron has finished

@@ -5,7 +5,7 @@ function Selector(args): JSX.Element {
         { value: 'spam', text: 'Spam' },
         { value: 'autoReply', text: 'Auto Reply' },
         { value: 'chatBot', text: 'Chat Bot' },
-        { value: 'replyOnKeyword', text: 'Gif on keyword' }
+        { value: 'replyOnKeyword', text: 'Text/Gif on keyword' }
     ];
     const [view, setView] = useState(options[0].value);
 
