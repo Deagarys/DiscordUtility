@@ -1,10 +1,6 @@
 import { Bot } from './Bot';
 import OpenAI from 'openai';
-
-type Message = {
-    role: 'system' | 'user' | 'assistant'; // Define the possible roles
-    content: string;
-};
+import { Message } from '../Dependencies/Message';
 
 export class ChatAiBot extends Bot {
     lastReceivedMessage: string = '';
