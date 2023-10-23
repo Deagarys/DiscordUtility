@@ -13,7 +13,7 @@ function GifOnKeyword(args): JSX.Element {
         { id: 'channelId', text: 'Channel Id', setter: setChannelId, getter: channelId },
         { id: 'authToken', text: 'Authorization Token', setter: setAuthToken, getter: authToken },
         { id: 'userId', text: 'User Id', setter: setUserId, getter: userId },
-        { id: 'linkToGif', text: 'Link to gif', setter: setLinkToGif, getter: linkToGif },
+        { id: 'linkToGif', text: 'Text/Link to gif', setter: setLinkToGif, getter: linkToGif },
         { id: 'keywords', text: 'Keywords (separate by ,)', setter: setKeywords, getter: keywords }
     ];
     const [bot] = useState(new GifOnKeywordBot());
