@@ -45,11 +45,6 @@ function createWindow(): void {
         mainWindow.loadFile(join(__dirname, '../renderer/index.html'));
     }
 
-    mainWindow.on('minimize', function (event) {
-        event.preventDefault();
-        mainWindow.hide();
-    });
-
     mainWindow.on('close', function (event) {
         if (!isQuitting) {
             event.preventDefault();
