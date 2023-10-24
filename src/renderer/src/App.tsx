@@ -4,6 +4,7 @@ import Spam from './components/Views/Spam';
 import AutoReply from './components/Views/AutoReply';
 import GifOnKeyword from './components/Views/GifOnKeyword';
 import ChatBot from './components/Views/ChatBot';
+const { ipcRenderer } = require('electron');
 
 function App(): JSX.Element {
     const [currentView, setCurrentView] = useState('spam');
@@ -16,6 +17,11 @@ function App(): JSX.Element {
     const changeView = (view: string): void => {
         setCurrentView(view);
     };
+
+    ipcRenderer.on('message', (event, text) => {
+        console.log(`Message: ${text}`);
+        console.log(`Event: ${event}`);
+    });
 
     return (
         <div className="container">
