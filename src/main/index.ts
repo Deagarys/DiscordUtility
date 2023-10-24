@@ -1,12 +1,18 @@
-import { app, shell, BrowserWindow, Menu, Tray } from 'electron';
+import { app, shell, BrowserWindow, Menu, Tray, powerSaveBlocker } from 'electron';
 import { join } from 'path';
 import { electronApp, optimizer, is } from '@electron-toolkit/utils';
 import discord from '../../resources/discord.png?asset';
 import discord16 from '../../resources/discord16.png?asset';
+import { autoUpdater } from 'electron-updater';
 
+autoUpdater.autoDownload = true;
+autoUpdater.autoInstallOnAppQuit = true;
+let mainWindow: BrowserWindow | null = null;
+
+let powerSaverId = 0;
 function createWindow(): void {
     // Create the browser window.
-    const mainWindow = new BrowserWindow({
+    mainWindow = new BrowserWindow({
         width: 900,
         height: 690,
         show: false,
@@ -30,7 +36,7 @@ function createWindow(): void {
     let isQuitting = false;
 
     mainWindow.on('ready-to-show', () => {
-        mainWindow.show();
+        mainWindow!.show();
     });
 
     mainWindow.webContents.setWindowOpenHandler((details) => {
@@ -47,10 +53,11 @@ function createWindow(): void {
     }
 
     mainWindow.on('close', function (event) {
+        powerSaverId = powerSaveBlocker.start('prevent-app-suspension');
+
         if (!isQuitting) {
             event.preventDefault();
-            mainWindow.hide();
-
+            mainWindow!.hide();
             return false;
         }
         return true;
@@ -78,7 +85,7 @@ function createWindow(): void {
             {
                 label: 'Show',
                 click: function (): void {
-                    mainWindow.show();
+                    showWindow(mainWindow!);
                 }
             },
             {
@@ -94,8 +101,15 @@ function createWindow(): void {
     tray.setToolTip('Discord Utility');
     tray.setTitle('Discord Utility');
     tray.on('click', (): void => {
-        mainWindow.show();
+        showWindow(mainWindow!);
     });
+}
+
+function showWindow(window: BrowserWindow): void {
+    window!.show();
+    if (powerSaveBlocker.isStarted(powerSaverId)) {
+        powerSaveBlocker.stop(powerSaverId);
+    }
 }
 
 // This method will be called when Electron has finished
@@ -119,6 +133,37 @@ app.whenReady().then(() => {
         // dock icon is clicked and there are no other windows open.
         if (BrowserWindow.getAllWindows().length === 0) createWindow();
     });
+    autoUpdater.checkForUpdates();
+});
+
+const sendMessageToWindow = (message: string): void => {
+    if (mainWindow) {
+        mainWindow.webContents.send('message', message);
+    }
+};
+
+autoUpdater.on('checking-for-update', () => {
+    sendMessageToWindow('Checking for update...');
+});
+
+autoUpdater.on('update-available', () => {
+    sendMessageToWindow('Update available!');
+});
+
+autoUpdater.on('update-not-available', () => {
+    sendMessageToWindow('Already on the newest version!');
+});
+
+autoUpdater.on('error', (error) => {
+    sendMessageToWindow(`Error in auto-updater: ${error}`);
+});
+
+autoUpdater.on('download-progress', (progressObject) => {
+    sendMessageToWindow(`Downloading: ${progressObject.percent}%`);
+});
+
+autoUpdater.on('update-downloaded', (info) => {
+    sendMessageToWindow(`Update downloaded, will install now! Version: ${info.version}`);
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common
