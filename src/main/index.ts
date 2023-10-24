@@ -155,7 +155,6 @@ autoUpdater.on('download-progress', (progressObject) => {
 
 autoUpdater.on('update-downloaded', (info) => {
     sendMessageToWindow(`Update downloaded, will install now! Version: ${info.version}`);
-    autoUpdater.quitAndInstall();
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common
