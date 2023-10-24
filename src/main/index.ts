@@ -1,9 +1,10 @@
-import { app, shell, BrowserWindow, Menu, Tray } from 'electron';
+import { app, shell, BrowserWindow, Menu, Tray, powerSaveBlocker } from 'electron';
 import { join } from 'path';
 import { electronApp, optimizer, is } from '@electron-toolkit/utils';
 import discord from '../../resources/discord.png?asset';
 import discord16 from '../../resources/discord16.png?asset';
 
+let powerSaverId = 0;
 function createWindow(): void {
     // Create the browser window.
     const mainWindow = new BrowserWindow({
@@ -47,10 +48,11 @@ function createWindow(): void {
     }
 
     mainWindow.on('close', function (event) {
+        powerSaverId = powerSaveBlocker.start('prevent-app-suspension');
+
         if (!isQuitting) {
             event.preventDefault();
             mainWindow.hide();
-
             return false;
         }
         return true;
@@ -78,7 +80,7 @@ function createWindow(): void {
             {
                 label: 'Show',
                 click: function (): void {
-                    mainWindow.show();
+                    showWindow(mainWindow);
                 }
             },
             {
@@ -94,8 +96,15 @@ function createWindow(): void {
     tray.setToolTip('Discord Utility');
     tray.setTitle('Discord Utility');
     tray.on('click', (): void => {
-        mainWindow.show();
+        showWindow(mainWindow);
     });
+}
+
+function showWindow(window: BrowserWindow): void {
+    window.show();
+    if (powerSaveBlocker.isStarted(powerSaverId)) {
+        powerSaveBlocker.stop(powerSaverId);
+    }
 }
 
 // This method will be called when Electron has finished
