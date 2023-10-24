@@ -85,7 +85,7 @@ function createWindow(): void {
             {
                 label: 'Show',
                 click: function (): void {
-                    showWindow(mainWindow);
+                    showWindow(mainWindow!);
                 }
             },
             {
@@ -101,7 +101,7 @@ function createWindow(): void {
     tray.setToolTip('Discord Utility');
     tray.setTitle('Discord Utility');
     tray.on('click', (): void => {
-        showWindow(mainWindow);
+        showWindow(mainWindow!);
     });
 }
 
