@@ -4,6 +4,7 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils';
 import discord from '../../resources/discord.png?asset';
 import discord16 from '../../resources/discord16.png?asset';
 import { autoUpdater } from 'electron-updater';
+import { sleep } from 'openai/core';
 
 autoUpdater.autoDownload = true;
 let mainWindow: BrowserWindow | null = null;
@@ -168,8 +169,11 @@ autoUpdater.on('download-progress', (progressObject) => {
     sendMessageToWindow(`Downloading: ${progressObject.percent}%`);
 });
 
-autoUpdater.on('update-downloaded', (info) => {
+autoUpdater.on('update-downloaded', async (info) => {
     sendMessageToWindow(`Update downloaded, will install now! Version: ${info.version}`);
+
+    await sleep(2000);
+    autoUpdater.quitAndInstall();
 });
 
 if (!app.isPackaged) sendUpdateCompletedToWindow('true');
