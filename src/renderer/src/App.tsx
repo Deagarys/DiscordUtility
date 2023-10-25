@@ -9,6 +9,8 @@ const { ipcRenderer } = require('electron');
 function App(): JSX.Element {
     const [currentView, setCurrentView] = useState('spam');
     const [started, setStarted] = useState(false);
+    const [updateComplete, setUpdateComplete] = useState(process.env.NODE_ENV === 'development');
+    const [updateText, setUpdateText] = useState('Checking for update...');
 
     const toggleStarted = (): void => {
         setStarted(!started);
@@ -19,18 +21,33 @@ function App(): JSX.Element {
     };
 
     ipcRenderer.on('message', (event, text) => {
+        setUpdateText(text);
         console.log(`Message: ${text}`);
         console.log(`Event: ${event}`);
     });
 
+    ipcRenderer.on('updateComplete', () => {
+        setUpdateComplete(true);
+    });
+
+    console.log(process.env.NODE_ENV);
+
     return (
         <div className="container">
-            <h1>Discord Utility</h1>
-            <Selector method={changeView} disabled={started} />
-            {currentView == 'spam' ? <Spam method={toggleStarted} /> : ''}
-            {currentView == 'autoReply' ? <AutoReply method={toggleStarted} /> : ''}
-            {currentView == 'replyOnKeyword' ? <GifOnKeyword method={toggleStarted} /> : ''}
-            {currentView == 'chatBot' ? <ChatBot method={toggleStarted} /> : ''}
+            {updateComplete ? (
+                <div>
+                    <h1>Discord Utility</h1>
+                    <Selector method={changeView} disabled={started} />
+                    {currentView == 'spam' ? <Spam method={toggleStarted} /> : ''}
+                    {currentView == 'autoReply' ? <AutoReply method={toggleStarted} /> : ''}
+                    {currentView == 'replyOnKeyword' ? <GifOnKeyword method={toggleStarted} /> : ''}
+                    {currentView == 'chatBot' ? <ChatBot method={toggleStarted} /> : ''}
+                </div>
+            ) : (
+                <div className={'updateDiv'}>
+                    <h1>{updateText}</h1>
+                </div>
+            )}
         </div>
     );
 }

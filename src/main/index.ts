@@ -4,12 +4,12 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils';
 import discord from '../../resources/discord.png?asset';
 import discord16 from '../../resources/discord16.png?asset';
 import { autoUpdater } from 'electron-updater';
+import { sleep } from 'openai/core';
 
-autoUpdater.autoDownload = true;
-autoUpdater.autoInstallOnAppQuit = true;
+if (process.env.NODE_ENV !== 'development') autoUpdater.autoDownload = true;
 let mainWindow: BrowserWindow | null = null;
-
 let powerSaverId = 0;
+
 function createWindow(): void {
     // Create the browser window.
     mainWindow = new BrowserWindow({
@@ -133,12 +133,19 @@ app.whenReady().then(() => {
         // dock icon is clicked and there are no other windows open.
         if (BrowserWindow.getAllWindows().length === 0) createWindow();
     });
-    autoUpdater.checkForUpdates();
+
+    if (process.env.NODE_ENV !== 'development') autoUpdater.checkForUpdates();
 });
 
 const sendMessageToWindow = (message: string): void => {
     if (mainWindow) {
         mainWindow.webContents.send('message', message);
+    }
+};
+
+const sendUpdateCompletedToWindow = (message: string): void => {
+    if (mainWindow) {
+        mainWindow.webContents.send('updateComplete', message);
     }
 };
 
@@ -152,6 +159,7 @@ autoUpdater.on('update-available', () => {
 
 autoUpdater.on('update-not-available', () => {
     sendMessageToWindow('Already on the newest version!');
+    sendUpdateCompletedToWindow('true');
 });
 
 autoUpdater.on('error', (error) => {
@@ -162,8 +170,11 @@ autoUpdater.on('download-progress', (progressObject) => {
     sendMessageToWindow(`Downloading: ${progressObject.percent}%`);
 });
 
-autoUpdater.on('update-downloaded', (info) => {
+autoUpdater.on('update-downloaded', async (info) => {
     sendMessageToWindow(`Update downloaded, will install now! Version: ${info.version}`);
+
+    await sleep(2000);
+    autoUpdater.quitAndInstall();
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common
