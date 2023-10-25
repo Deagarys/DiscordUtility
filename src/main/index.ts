@@ -8,8 +8,8 @@ import { autoUpdater } from 'electron-updater';
 autoUpdater.autoDownload = true;
 autoUpdater.autoInstallOnAppQuit = true;
 let mainWindow: BrowserWindow | null = null;
-
 let powerSaverId = 0;
+
 function createWindow(): void {
     // Create the browser window.
     mainWindow = new BrowserWindow({
@@ -142,6 +142,12 @@ const sendMessageToWindow = (message: string): void => {
     }
 };
 
+const sendUpdateCompletedToWindow = (message: string): void => {
+    if (mainWindow) {
+        mainWindow.webContents.send('updateComplete', message);
+    }
+};
+
 autoUpdater.on('checking-for-update', () => {
     sendMessageToWindow('Checking for update...');
 });
@@ -152,6 +158,7 @@ autoUpdater.on('update-available', () => {
 
 autoUpdater.on('update-not-available', () => {
     sendMessageToWindow('Already on the newest version!');
+    sendUpdateCompletedToWindow('true');
 });
 
 autoUpdater.on('error', (error) => {
@@ -165,6 +172,9 @@ autoUpdater.on('download-progress', (progressObject) => {
 autoUpdater.on('update-downloaded', (info) => {
     sendMessageToWindow(`Update downloaded, will install now! Version: ${info.version}`);
 });
+
+if (!app.isPackaged) sendUpdateCompletedToWindow('true');
+console.log(app.isPackaged);
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
