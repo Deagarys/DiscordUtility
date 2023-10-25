@@ -6,7 +6,7 @@ import discord16 from '../../resources/discord16.png?asset';
 import { autoUpdater } from 'electron-updater';
 import { sleep } from 'openai/core';
 
-autoUpdater.autoDownload = true;
+if (process.env.NODE_ENV !== 'development') autoUpdater.autoDownload = true;
 let mainWindow: BrowserWindow | null = null;
 let powerSaverId = 0;
 
@@ -133,7 +133,8 @@ app.whenReady().then(() => {
         // dock icon is clicked and there are no other windows open.
         if (BrowserWindow.getAllWindows().length === 0) createWindow();
     });
-    autoUpdater.checkForUpdates();
+
+    if (process.env.NODE_ENV !== 'development') autoUpdater.checkForUpdates();
 });
 
 const sendMessageToWindow = (message: string): void => {
@@ -175,9 +176,6 @@ autoUpdater.on('update-downloaded', async (info) => {
     await sleep(2000);
     autoUpdater.quitAndInstall();
 });
-
-if (!app.isPackaged) sendUpdateCompletedToWindow('true');
-console.log(app.isPackaged);
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits

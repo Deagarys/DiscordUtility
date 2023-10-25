@@ -9,7 +9,7 @@ const { ipcRenderer } = require('electron');
 function App(): JSX.Element {
     const [currentView, setCurrentView] = useState('spam');
     const [started, setStarted] = useState(false);
-    const [updateComplete, setUpdateComplete] = useState(false);
+    const [updateComplete, setUpdateComplete] = useState(process.env.NODE_ENV === 'development');
     const [updateText, setUpdateText] = useState('Checking for update...');
 
     const toggleStarted = (): void => {
@@ -30,6 +30,8 @@ function App(): JSX.Element {
         setUpdateComplete(true);
     });
 
+    console.log(process.env.NODE_ENV);
+
     return (
         <div className="container">
             {updateComplete ? (
@@ -42,9 +44,8 @@ function App(): JSX.Element {
                     {currentView == 'chatBot' ? <ChatBot method={toggleStarted} /> : ''}
                 </div>
             ) : (
-                <div>
-                    <h1>Updating</h1>
-                    <p>{updateText}</p>
+                <div className={'updateDiv'}>
+                    <h1>{updateText}</h1>
                 </div>
             )}
         </div>
