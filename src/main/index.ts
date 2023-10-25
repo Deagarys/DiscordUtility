@@ -6,7 +6,6 @@ import discord16 from '../../resources/discord16.png?asset';
 import { autoUpdater } from 'electron-updater';
 
 autoUpdater.autoDownload = true;
-autoUpdater.autoInstallOnAppQuit = true;
 let mainWindow: BrowserWindow | null = null;
 let powerSaverId = 0;
 
